@@ -20,6 +20,32 @@
 
     @yield('styles')
 
+    @if (app()->currentLocale() == 'ar')
+        <style>
+            body {
+                direction: rtl;
+                text-align: right;
+            }
+            .sidebar {
+                padding: 0
+            }
+
+            .sidebar .nav-item .nav-link {
+                text-align: right
+            }
+
+            .sidebar .nav-item .nav-link[data-toggle=collapse]::after {
+                float: left;
+                transform: rotate(180deg)
+            }
+
+            .ml-auto, .mx-auto {
+                margin-right: auto!important;
+                margin-left: unset!important;
+            }
+        </style>
+    @endif
+
 </head>
 
 <body id="page-top">
@@ -45,7 +71,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
+                    {{-- <span>{{ __('Dashboard') }}</span> --}}
+                    <span>{{ __('site.Dashboard') }}</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -56,7 +84,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory"
                     aria-expanded="true" aria-controls="collapseCategory">
                     <i class="fas fa-fw fa-tags"></i>
-                    <span>Categories</span>
+                    <span>{{ __('site.Categories') }}</span>
                 </a>
                 <div id="collapseCategory" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -74,7 +102,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseProduct"
                     aria-expanded="true" aria-controls="collapseProduct">
                     <i class="fas fa-fw fa-heart"></i>
-                    <span>Products</span>
+                    <span>{{ __('site.Products') }}</span>
                 </a>
                 <div id="collapseProduct" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -90,7 +118,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-shopping-bag"></i>
-                    <span>Orders</span></a>
+                    <span>{{ __('site.Orders') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -99,7 +127,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-money-bill"></i>
-                    <span>Payments</span></a>
+                    <span>{{ __('site.Payments') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -108,7 +136,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-users"></i>
-                    <span>Customers</span></a>
+                    <span>{{ __('site.Customers') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -119,7 +147,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCode"
                     aria-expanded="true" aria-controls="collapseCode">
                     <i class="fas fa-fw fa-percent"></i>
-                    <span>Promocodes</span>
+                    <span>{{ __('site.Promocodes') }}</span>
                 </a>
                 <div id="collapseCode" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -135,7 +163,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="index.html">
                     <i class="fas fa-fw fa-comments"></i>
-                    <span>Reviews</span></a>
+                    <span>{{ __('site.Reviews') }}</span></a>
             </li>
 
             <!-- Divider -->
@@ -146,7 +174,7 @@
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTestimonials"
                     aria-expanded="true" aria-controls="collapseTestimonials">
                     <i class="fas fa-fw fa-comment-alt"></i>
-                    <span>Testimonials</span>
+                    <span>{{ __('site.Testimonials') }}</span>
                 </a>
                 <div id="collapseTestimonials" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
@@ -185,29 +213,38 @@
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
 
-                        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 ">Languages ({{ app()->currentLocale() }})
                             </a>
-                            <!-- Dropdown - Messages -->
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                    <a class="dropdown-item" rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                        {{-- {{ $localeCode }} --}}
+                                        {{-- @if ($localeCode == 'ar')
+                                        <img width="20" src="{{ asset('adminassets/img/ps.png') }}" alt="">
+                                        @else
+                                        <img width="20" src="{{ asset('adminassets/img/uk.png') }}" alt="">
+                                        @endif --}}
+                                        <img width="20" src="{{ asset('adminassets/img/'.$properties['flag']) }}" alt="">
+                                        {{ $properties['native'] }}
+                                    </a>
+                            @endforeach
+
                             </div>
                         </li>
+
+                            {{-- @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)
+                                <li class="nav-item">
+                                    <a class="nav-link" rel="alternate" hreflang="{{ $localeCode }}" href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}">
+                                        {{ $properties['native'] }}
+                                    </a>
+                                </li>
+                            @endforeach --}}
+
 
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
