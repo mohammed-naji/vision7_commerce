@@ -34,12 +34,12 @@
     @foreach ($categories as $category)
     <tr>
         <td>{{ $category->id }}</td>
-        <td>{{ $category->name }}</td>
+        <td>{{ $category->trans_name }}</td>
         {{-- <td>{{ json_decode($category->name) }}</td> --}}
         {{-- <td>{{ json_decode($category->name, true)[app()->currentLocale()] }}</td> --}}
         {{-- <td>@dump(json_decode($category->name, true)[app()->currentLocale()])</td> --}}
         <td><img width="80" src="{{ asset('uploads/categories/'.$category->image) }}" alt=""></td>
-        <td>{{ $category->parent->name }}</td>
+        <td>{{ $category->parent->trans_name }}</td>
         <td>
             <a class="btn btn-sm btn-primary" href="{{ route('admin.categories.edit', $category->id) }}"><i class="fas fa-edit"></i></a>
             <form class="d-inline" action="{{ route('admin.categories.destroy', $category->id) }}" method="POST">
