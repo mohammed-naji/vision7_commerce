@@ -31,12 +31,19 @@ Route::prefix(LaravelLocalization::setLocale())->group(function() {
     });
 
 
+    Route::get('/', [SiteController::class, 'index'])->name('site.index');
+
+    Route::get('/shop', [SiteController::class, 'shop'])->name('site.shop');
+
+    Route::get('/product/{id}', [SiteController::class, 'product'])->name('site.product');
+
+
     // Route::get('/', function() {
     //     return view('welcome');
     // });
 
     // Route::view('/', 'welcome')->name('site.index');
-    Route::get('/', [SiteController::class, 'index'])->name('site.index');
+
 
     Auth::routes();
 
