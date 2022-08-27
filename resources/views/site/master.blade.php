@@ -1,3 +1,6 @@
+@php
+    use App\Models\Category;
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 
@@ -74,40 +77,34 @@
 						<a href="#!" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><i
 								class="tf-ion-android-cart"></i>Cart</a>
 						<div class="dropdown-menu cart-dropdown">
-							<!-- Cart Item -->
-							<div class="media">
-								<a class="pull-left" href="#!">
-									<img class="media-object" src="images/shop/cart/cart-1.jpg" alt="image" />
-								</a>
-								<div class="media-body">
-									<h4 class="media-heading"><a href="#!">Ladies Bag</a></h4>
-									<div class="cart-price">
-										<span>1 x</span>
-										<span>1250.00</span>
-									</div>
-									<h5><strong>$1200</strong></h5>
-								</div>
-								<a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-							</div><!-- / Cart Item -->
-							<!-- Cart Item -->
-							<div class="media">
-								<a class="pull-left" href="#!">
-									<img class="media-object" src="images/shop/cart/cart-2.jpg" alt="image" />
-								</a>
-								<div class="media-body">
-									<h4 class="media-heading"><a href="#!">Ladies Bag</a></h4>
-									<div class="cart-price">
-										<span>1 x</span>
-										<span>1250.00</span>
-									</div>
-									<h5><strong>$1200</strong></h5>
-								</div>
-								<a href="#!" class="remove"><i class="tf-ion-close"></i></a>
-							</div><!-- / Cart Item -->
+                            @php
+                                $total = 0;
+                            @endphp
+                            @foreach (Auth::user()->carts as $cart)
+                            <!-- Cart Item -->
+                            <div class="media">
+                                <a class="pull-left" href="{{ route('site.product', $cart->product_id) }}">
+                                    <img class="media-object" src="{{ asset('uploads/products/'.$cart->product->image) }}" alt="image" />
+                                </a>
+                                <div class="media-body">
+                                    <h4 class="media-heading"><a href="{{ route('site.product', $cart->product_id) }}">{{ $cart->product->trans_name }}</a></h4>
+                                    <div class="cart-price">
+                                        <span>{{ $cart->quantity }} x</span>
+                                        <span>{{ $cart->price }}</span>
+                                    </div>
+                                    @php
+                                        $total += $cart->quantity * $cart->price;
+                                    @endphp
+                                    <h5><strong>${{ $cart->quantity * $cart->price }}</strong></h5>
+                                </div>
+                                <a href="#!" class="remove"><i class="tf-ion-close"></i></a>
+                            </div><!-- / Cart Item -->
+                            @endforeach
+
 
 							<div class="cart-summary">
 								<span>Total</span>
-								<span class="total-price">$1799.00</span>
+								<span class="total-price">${{ $total }}</span>
 							</div>
 							<ul class="text-center cart-buttons">
 								<li><a href="cart.html" class="btn btn-small">View Cart</a></li>
@@ -123,7 +120,10 @@
 								class="tf-ion-ios-search-strong"></i> Search</a>
 						<ul class="dropdown-menu search-dropdown">
 							<li>
-								<form action="https://demo.themefisher.com/aviato/post"><input type="search" class="form-control" placeholder="Search..."></form>
+								<form action="{{ route('site.search') }}" method="GET">
+                                    <input type="search" class="form-control" placeholder="Search..." name="s" value="{{ request()->s }}">
+
+                                </form>
 							</li>
 						</ul>
 					</li><!-- / Search -->
@@ -165,17 +165,17 @@
 
 					<!-- Home -->
 					<li class="dropdown ">
-						<a href="index-2.html">Home</a>
+						<a href="{{ route('site.index') }}">Home</a>
 					</li><!-- / Home -->
 
                     <!-- Home -->
 					<li class="dropdown ">
-						<a href="index-2.html">About</a>
+						<a href="{{ route('site.about') }}">About</a>
 					</li><!-- / Home -->
 
                     <!-- Home -->
 					<li class="dropdown ">
-						<a href="index-2.html">Shop</a>
+						<a href="{{ route('site.shop') }}">Shop</a>
 					</li><!-- / Home -->
 
                     <!-- Blog -->
@@ -184,17 +184,15 @@
 							role="button" aria-haspopup="true" aria-expanded="false">Categories <span
 								class="tf-ion-ios-arrow-down"></span></a>
 						<ul class="dropdown-menu">
-							<li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
-							<li><a href="blog-right-sidebar.html">Blog Right Sidebar</a></li>
-							<li><a href="blog-full-width.html">Blog Full Width</a></li>
-							<li><a href="blog-grid.html">Blog 2 Columns</a></li>
-							<li><a href="blog-single.html">Blog Single</a></li>
+                            @foreach (Category::all() as $category)
+                                <li><a href="{{ route('site.category', $category->id) }}">{{ $category->trans_name }}</a></li>
+                            @endforeach
 						</ul>
 					</li><!-- / Blog -->
 
                     <!-- Home -->
 					<li class="dropdown ">
-						<a href="index-2.html">Contact Us</a>
+						<a href="{{ route('site.contact') }}">Contact Us</a>
 					</li><!-- / Home -->
 
 

@@ -2,7 +2,55 @@
 
 @section('title', $product->trans_name . ' | ' . config('app.name'))
 
+@section('styles')
+
+<style>
+
+.rate {
+    float: left;
+    height: 46px;
+    padding: 0 10px;
+}
+.rate:not(:checked) > input {
+    display: none;
+}
+.rate:not(:checked) > label {
+    float:right;
+    width:1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    font-size:20px;
+    color:#ccc;
+}
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+.rate > input:checked ~ label {
+    color: #000;
+}
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #000;
+}
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #000;
+}
+
+#product-quantity::-webkit-outer-spin-button,
+#product-quantity::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+</style>
+@stop
+
 @section('content')
+@include('admin.errors')
 <section class="single-product">
 	<div class="container">
 		<div class="row">
@@ -32,6 +80,11 @@
 			</div>
 			<div class="col-md-7">
 				<div class="single-product-details">
+                    @if (session('msg'))
+                        <div class="alert alert-success">
+                            {{ session('msg') }}
+                        </div>
+                    @endif
 					<h2>{{ $product->trans_name }}</h2>
 					<p class="product-price">${{ $product->sale_price ? $product->sale_price : $product->price }}</p>
 
@@ -64,16 +117,20 @@
 					<div class="product-category">
 						<span>Category:</span>
 						<ul>
-							<li><a href="product-single.html">{{ $product->category->trans_name }}</a></li>
+							<li><a href="{{ route('site.category', $product->category_id) }}">{{ $product->category->trans_name }}</a></li>
 						</ul>
 					</div>
-					<div class="product-quantity">
-						<span>Quantity:</span>
-						<div class="product-quantity-slider">
-							<input id="product-quantity" type="text" value="0" name="product-quantity">
-						</div>
-					</div>
-					<a href="cart.html" class="btn btn-main mt-20">Add To Cart</a>
+                    <form action="{{ route('site.add_to_cart', $product->id) }}" method="POST">
+                        @csrf
+                        <div class="product-quantity">
+                            <span>Quantity:</span>
+                            <div class="product-quantity-slider">
+                                <input id="product-quantity" type="number" value="1" min="1" max="{{ $product->quantity }}" name="quantity">
+                            </div>
+                        </div>
+                        <button class="btn btn-main mt-20">Add To Cart</button>
+                    </form>
+
 				</div>
 			</div>
 		</div>
@@ -90,6 +147,9 @@
 							{!! $product->trans_content !!}
 						</div>
 						<div id="reviews" class="tab-pane fade">
+                            @if ($product->reviews->count() == 0)
+                                <p>There is no reviews yet, be the first one</p>
+                            @endif
 							<div class="post-comments">
 						    	<ul class="media-list comments-list m-bot-50 clearlist">
                                     @foreach ($product->reviews as $review)
@@ -117,6 +177,62 @@
 								    </li>
                                     @endforeach
 							</ul>
+
+                            @auth
+                            <h4>Post New Review</h4>
+                            <form action="{{ route('site.product_review', $product->id) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <div class="rate">
+                                    <input type="radio" id="star5" name="rate" value="5" />
+                                    <label for="star5" title="text">5 stars</label>
+                                    <input type="radio" id="star4" name="rate" value="4" />
+                                    <label for="star4" title="text">4 stars</label>
+                                    <input type="radio" id="star3" name="rate" value="3" />
+                                    <label for="star3" title="text">3 stars</label>
+                                    <input type="radio" id="star2" name="rate" value="2" />
+                                    <label for="star2" title="text">2 stars</label>
+                                    <input type="radio" id="star1" name="rate" value="1" />
+                                    <label for="star1" title="text">1 star</label>
+                                </div>
+                                <br>
+                                <textarea class="form-control" placeholder="Write Review Here..." rows="5" name="comment"></textarea>
+                                <br>
+                                <button class="btn btn-main">Sumbit</button>
+                            </form>
+                            @endauth
+
+                            @guest
+                            <p>To be able to add a review you need to be <b><a href="{{ route('login') }}">login</a></b> first</p>
+                            @endguest
+
+                            {{-- @if (Auth::check())
+                                <h4>Post New Review</h4>
+                                <form action="{{ route('site.product_review', $product->id) }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <div class="rate">
+                                        <input type="radio" id="star5" name="rate" value="5" />
+                                        <label for="star5" title="text">5 stars</label>
+                                        <input type="radio" id="star4" name="rate" value="4" />
+                                        <label for="star4" title="text">4 stars</label>
+                                        <input type="radio" id="star3" name="rate" value="3" />
+                                        <label for="star3" title="text">3 stars</label>
+                                        <input type="radio" id="star2" name="rate" value="2" />
+                                        <label for="star2" title="text">2 stars</label>
+                                        <input type="radio" id="star1" name="rate" value="1" />
+                                        <label for="star1" title="text">1 star</label>
+                                    </div>
+                                    <br>
+                                    <textarea class="form-control" placeholder="Write Review Here..." rows="5" name="comment"></textarea>
+                                    <br>
+                                    <button class="btn btn-main">Sumbit</button>
+                                </form>
+                            @else
+                            <p>To be able to add a review you need to be <b><a href="{{ route('login') }}">login</a></b> first</p>
+                            @endif --}}
+
+
 							</div>
 						</div>
 					</div>

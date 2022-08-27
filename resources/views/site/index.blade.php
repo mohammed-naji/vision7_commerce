@@ -30,7 +30,7 @@
             @foreach ($categories as $category)
             <div class="col-md-4">
 				<div class="category-box">
-					<a href="#!">
+					<a href="{{ route('site.category', $category->id) }}">
 						<img src="{{ asset('uploads/categories/'.$category->image) }}" alt="" />
 						<div class="content">
 							<h3>{{ $category->trans_name }}</h3>

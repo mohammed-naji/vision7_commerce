@@ -35,7 +35,19 @@ Route::prefix(LaravelLocalization::setLocale())->group(function() {
 
     Route::get('/shop', [SiteController::class, 'shop'])->name('site.shop');
 
+    Route::get('/about', [SiteController::class, 'about'])->name('site.about');
+
+    Route::get('/contact', [SiteController::class, 'contact'])->name('site.contact');
+
+    Route::get('/search', [SiteController::class, 'search'])->name('site.search');
+
     Route::get('/product/{id}', [SiteController::class, 'product'])->name('site.product');
+
+    Route::post('/product/{id}/add-to-cart', [SiteController::class, 'add_to_cart'])->name('site.add_to_cart');
+
+    Route::post('/product/{id}/review', [SiteController::class, 'product_review'])->name('site.product_review');
+
+    Route::get('/category/{id}', [SiteController::class, 'category'])->name('site.category');
 
 
     // Route::get('/', function() {
