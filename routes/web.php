@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\CategoryController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // Route::group(['prefix' => LaravelLocalization::setLocale()], function()
@@ -48,6 +49,20 @@ Route::prefix(LaravelLocalization::setLocale())->group(function() {
     Route::post('/product/{id}/review', [SiteController::class, 'product_review'])->name('site.product_review');
 
     Route::get('/category/{id}', [SiteController::class, 'category'])->name('site.category');
+
+    Route::middleware('auth')->group(function() {
+        Route::get('/cart', [CartController::class, 'cart'])->name('site.cart');
+        Route::post('/update-cart', [CartController::class, 'update_cart'])->name('site.update_cart');
+        Route::get('/remove-cart/{id}', [CartController::class, 'remove_cart'])->name('site.remove_cart');
+
+        Route::get('/checkout', [CartController::class, 'checkout'])->name('site.checkout');
+        Route::get('/payment', [CartController::class, 'payment'])->name('site.payment');
+
+        Route::get('/payment/success', [CartController::class, 'payment_success'])->name('site.payment_success');
+        Route::get('/payment/fail', [CartController::class, 'payment_fail'])->name('site.payment_fail');
+    });
+
+
 
 
     // Route::get('/', function() {
