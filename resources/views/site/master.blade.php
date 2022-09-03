@@ -50,6 +50,7 @@
 					<a href="tel:0592418889"><i class="tf-ion-ios-telephone"></i>
                         <span>0592418889</span></a>
 				</div>
+                - {!! $weather !!}
 			</div>
 			<div class="col-md-4 col-xs-12 col-sm-4">
 				<!-- Site Logo -->

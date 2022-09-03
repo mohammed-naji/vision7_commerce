@@ -6,6 +6,8 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Review;
+use App\Models\User;
+use App\Notifications\NewOrder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -114,5 +116,32 @@ class SiteController extends Controller
         ]);
 
         return redirect()->back()->with('msg', 'Product added to cart successfully');
+    }
+
+
+
+
+
+    // Dont Use This function on live website
+    public function send_notification()
+    {
+        $user = User::where('type', 'admin')->first();
+        $order = [
+            'msg' => 'New like on your post'
+        ];
+        $user->notify(new NewOrder($order));
+    }
+
+    public function user_notification()
+    {
+        $user = User::where('type', 'admin')->first();
+        return view('site.notifications', compact('user'));
+    }
+
+    public function read_notification($id)
+    {
+        $user = User::where('type', 'admin')->first();
+        $user->notifications()->find($id)->markAsRead();
+        return redirect()->back();
     }
 }

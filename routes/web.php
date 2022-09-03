@@ -7,6 +7,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Learn\APIController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 // Route::group(['prefix' => LaravelLocalization::setLocale()], function()
@@ -50,6 +51,10 @@ Route::prefix(LaravelLocalization::setLocale())->group(function() {
 
     Route::get('/category/{id}', [SiteController::class, 'category'])->name('site.category');
 
+    Route::get('/send-notification', [SiteController::class, 'send_notification']);
+    Route::get('/user-notification', [SiteController::class, 'user_notification']);
+    Route::get('/read-notification/{id}', [SiteController::class, 'read_notification'])->name('rn');
+
     Route::middleware('auth')->group(function() {
         Route::get('/cart', [CartController::class, 'cart'])->name('site.cart');
         Route::post('/update-cart', [CartController::class, 'update_cart'])->name('site.update_cart');
@@ -77,5 +82,10 @@ Route::prefix(LaravelLocalization::setLocale())->group(function() {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     Route::view('not-allowed', 'not_allowed');
+
+
+
+    // API Routes JUST FOR LEARN
+    Route::get('api-users', [APIController::class, 'users']);
 
 });

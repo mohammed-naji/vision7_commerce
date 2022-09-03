@@ -130,15 +130,13 @@ class CartController extends Controller
 
                 // Send Notification to Admin "New Order Create"
 
-                Db::commit();
+
+
+                DB::commit();
             }catch(Exception $e) {
                 DB::rollBack();
                 throw new Exception($e->getMessage());
             }
-
-
-
-
 
             return redirect()->route('site.payment_success');
         }else {
