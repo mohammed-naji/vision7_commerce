@@ -7,6 +7,7 @@ use App\Http\Controllers\SiteController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Learn\APIController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
@@ -29,6 +30,8 @@ Route::prefix(LaravelLocalization::setLocale())->group(function() {
         Route::get('products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::get('products/{id}/forcedelete', [ProductController::class, 'forcedelete'])->name('products.forcedelete');
         Route::resource('products', ProductController::class);
+
+        Route::resource('roles', RoleController::class);
 
     });
 

@@ -9,6 +9,7 @@ use GuzzleHttp\Handler\Proxy;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 
 class ProductController extends Controller
 {
@@ -19,6 +20,7 @@ class ProductController extends Controller
      */
     public function index()
     {
+        Gate::authorize('all_products');
         $products = Product::with('category')->orderByDesc('id')->paginate(5);
         return view('admin.products.index', compact('products'));
     }

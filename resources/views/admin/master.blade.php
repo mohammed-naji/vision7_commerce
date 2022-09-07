@@ -189,6 +189,15 @@
             </li>
 
             <!-- Divider -->
+            <hr class="sidebar-divider mb-0">
+
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('admin.roles.index') }}">
+                    <i class="fas fa-fw fa-lock"></i>
+                    <span>{{ __('site.Roles') }}</span></a>
+            </li>
+
+            <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
             <!-- Sidebar Toggler (Sidebar) -->

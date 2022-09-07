@@ -10,4 +10,5 @@ return [
     'Promocodes' => 'اكواد الخصم',
     'Reviews' => 'التقييمات',
     'Testimonials' => 'اراء العملاء',
+    'Roles' => 'الصلاحيات'
 ];

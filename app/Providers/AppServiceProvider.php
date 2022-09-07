@@ -33,13 +33,15 @@ class AppServiceProvider extends ServiceProvider
         // dd(request()->ip());
 
         // $ip = request()->ip();
-        $ip = '100.36.44.0';
-        if($ip == '127.0.0.1') {
-            $city = 'Gaza';
-        }else {
-            $country = Http::get('http://www.geoplugin.net/json.gp?ip='.$ip)->json();
-            $city = $country['geoplugin_city'];
-        }
+        // $ip = '100.36.44.0';
+        // if($ip == '127.0.0.1') {
+        //     $city = 'Gaza';
+        // }else {
+        //     $country = Http::get('http://www.geoplugin.net/json.gp?ip='.$ip)->json();
+        //     $city = $country['geoplugin_city'];
+        // }
+
+        $city = 'gaza';
 
         // dd($_SERVER);
 

@@ -10,4 +10,5 @@ return [
     'Promocodes' => 'Promocodes',
     'Reviews' => 'Reviews',
     'Testimonials' => 'Testimonials',
+    'Roles' => 'Roles'
 ];
